@@ -122,7 +122,7 @@ function getGitDatesMap(dir) {
 
 const files = fs
   .readdirSync(transitionsDir)
-  .filter((f) => f.endsWith(".glsl"))
+  .filter((f) => f.endsWith(".glsl") && fs.statSync(path.join(transitionsDir, f)).isFile())
   .sort();
 
 const dates = getGitDatesMap(transitionsDir);
