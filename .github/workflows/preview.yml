@@ -39,6 +39,14 @@ jobs:
         if: github.event_name == 'pull_request'
         run: git fetch origin master --depth=1
 
+      - name: Checkout PR branch for workflow_dispatch
+        if: github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          git fetch origin "pull/${PR_NUMBER}/head" --depth=1
+          git checkout FETCH_HEAD -- transitions/
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
