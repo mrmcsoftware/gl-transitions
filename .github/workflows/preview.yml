@@ -102,6 +102,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # Discard any working tree changes from PR branch checkout
+          git checkout -- . 2>/dev/null || true
+          git clean -fd 2>/dev/null || true
+
           git fetch origin preview-assets 2>/dev/null || true
           if git rev-parse --verify origin/preview-assets >/dev/null 2>&1; then
             git checkout origin/preview-assets

@@ -25,9 +25,39 @@ jobs:
       - name: Build
         run: ./scripts/build.sh
 
-  publish:
+  check-publish:
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    outputs:
+      should_publish: ${{ steps.check.outputs.should_publish }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if transitions or build changed
+        id: check
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tag found — will publish"
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          CHANGED=$(git diff --name-only "$LAST_TAG" -- transitions/ scripts/build.sh scripts/gl-transition-transform.js scripts/release-skeleton/)
+          if [ -n "$CHANGED" ]; then
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+            echo "Changed files affecting package:"
+            echo "$CHANGED"
+          else
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+            echo "No changes to transitions or build scripts — skipping publish"
+          fi
+
+  publish:
+    needs: check-publish
+    if: needs.check-publish.outputs.should_publish == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
