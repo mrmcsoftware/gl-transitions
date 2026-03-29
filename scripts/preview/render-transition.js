@@ -163,23 +163,23 @@ function generateGradient(w, h, tl, br) {
 }
 
 const imagesDir = path.join(__dirname, "images");
-const fromTex = createTexture(
-  loadImage(path.join(imagesDir, "1.jpg"), width, height) || generateGradient(width, height, [30, 80, 180], [120, 40, 200]),
-  width, height
-);
-const toTex = createTexture(
-  loadImage(path.join(imagesDir, "2.jpg"), width, height) || generateGradient(width, height, [220, 120, 30], [240, 60, 80]),
-  width, height
+const fallbackGradients = [
+  { tl: [30, 80, 180],  br: [120, 40, 200] },
+  { tl: [220, 120, 30], br: [240, 60, 80] },
+  { tl: [40, 180, 80],  br: [200, 120, 40] },
+];
+const textures = [1, 2, 3].map((n, i) =>
+  createTexture(
+    loadImage(path.join(imagesDir, `${n}.jpg`), width, height) ||
+      generateGradient(width, height, fallbackGradients[i].tl, fallbackGradients[i].br),
+    width, height
+  )
 );
 
 const progressLoc = gl.getUniformLocation(program, "progress");
 gl.uniform1f(gl.getUniformLocation(program, "ratio"), width / height);
 gl.uniform1i(gl.getUniformLocation(program, "from"), 0);
 gl.uniform1i(gl.getUniformLocation(program, "to"), 1);
-gl.activeTexture(gl.TEXTURE0);
-gl.bindTexture(gl.TEXTURE_2D, fromTex);
-gl.activeTexture(gl.TEXTURE1);
-gl.bindTexture(gl.TEXTURE_2D, toTex);
 
 const uniforms = parseUniforms(transitionGlsl);
 for (const [name, { type, value }] of Object.entries(uniforms)) {
@@ -189,35 +189,44 @@ for (const [name, { type, value }] of Object.entries(uniforms)) {
 
 gl.viewport(0, 0, width, height);
 
+// Render 3 transitions: A->B, B->C, C->A (seamless loop)
+const segments = [[0, 1], [1, 2], [2, 0]];
+const framesPerSegment = delay + frames;
+const totalFrames = framesPerSegment * segments.length;
 const pixelData = new Uint8Array(width * height * 4);
 const flipped = new Uint8Array(width * height * 4);
 const rowSize = width * 4;
-const totalFrames = delay + frames + delay;
 const allFrames = Buffer.alloc(totalFrames * width * height * 4);
 
-console.error(`Rendering ${transitionName}: ${totalFrames} frames (${width}x${height})`);
+console.error(`Rendering ${transitionName}: ${totalFrames} frames, 3 segments (${width}x${height})`);
 
-for (let i = 0; i < totalFrames; i++) {
-  let p;
-  if (i < delay) p = 0.0;
-  else if (i >= delay + frames) p = 1.0;
-  else p = (i - delay) / (frames - 1);
+let frameIndex = 0;
+for (const [fromIdx, toIdx] of segments) {
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, textures[fromIdx]);
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, textures[toIdx]);
 
-  gl.uniform1f(progressLoc, p);
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
-  gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixelData);
+  for (let i = 0; i < framesPerSegment; i++) {
+    const p = i < delay ? 0.0 : (i - delay) / (frames - 1);
 
-  for (let y = 0; y < height; y++) {
-    flipped.set(pixelData.subarray(y * rowSize, y * rowSize + rowSize), (height - 1 - y) * rowSize);
+    gl.uniform1f(progressLoc, p);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixelData);
+
+    for (let y = 0; y < height; y++) {
+      flipped.set(pixelData.subarray(y * rowSize, y * rowSize + rowSize), (height - 1 - y) * rowSize);
+    }
+    allFrames.set(flipped, frameIndex * width * height * 4);
+    frameIndex++;
   }
-  allFrames.set(flipped, i * width * height * 4);
 }
 
 const filters = "scale=320:-1:flags=lanczos";
 try {
   execSync(
-    `ffmpeg -v fatal -f rawvideo -pix_fmt rgba -s ${width}x${height} -framerate 30 -i pipe:0 -vf "${filters},split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -y "${outputPath}"`,
-    { input: allFrames, maxBuffer: 50 * 1024 * 1024 }
+    `ffmpeg -v fatal -f rawvideo -pix_fmt rgba -s ${width}x${height} -framerate 30 -i pipe:0 -vf "${filters},split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 -y "${outputPath}"`,
+    { input: allFrames, maxBuffer: 100 * 1024 * 1024 }
   );
   const size = fs.statSync(outputPath).size;
   console.error(`Generated ${outputPath} (${(size / 1024).toFixed(0)} KB)`);
