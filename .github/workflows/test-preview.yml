@@ -31,6 +31,14 @@ jobs:
       - name: Install preview dependencies
         run: cd scripts/preview && npm install
 
+      - name: Validate test transitions
+        run: |
+          xvfb-run -s "-ac -screen 0 1280x1024x24" bash -c '
+            node scripts/preview/validate-transition.js -t transitions/fade.glsl &&
+            node scripts/preview/validate-transition.js -t transitions/crosswarp.glsl &&
+            node scripts/preview/validate-transition.js -t transitions/Bounce.glsl
+          '
+
       - name: Render test transitions
         run: |
           mkdir -p /tmp/test-previews
