@@ -4,10 +4,10 @@
 #define PI 3.14159265358979
 const float rad = 120.; // change this value to get different mirror effects
 const float deg = rad / 180. * PI;
-uniform float scale; // = 2.0;
-uniform float z; // = 1.5;
+uniform float scale; // = 2.0
+uniform float z; // = 1.5
 float dist = scale / 10.;
-uniform float speed; // = 5.;
+uniform float speed; // = 5.
 vec2 refl(vec2 p,vec2 o,vec2 n)
 {
 	return 2.0*o+2.0*n*dot(p-o,n)-p;

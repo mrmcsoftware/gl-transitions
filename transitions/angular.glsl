@@ -3,7 +3,7 @@
 
 #define PI 3.141592653589
 
-uniform float startingAngle; // = 90;
+uniform float startingAngle; // = 90
 
 vec4 transition (vec2 uv) {
   

@@ -3,10 +3,10 @@
 
 #define PI 3.14159265359
 
-uniform vec2 center; // = vec2(0.5, 0.5);
-uniform float rotations; // = 1;
-uniform float scale; // = 8;
-uniform vec4 backColor; // = vec4(0.15, 0.15, 0.15, 1.0);
+uniform vec2 center; // = vec2(0.5, 0.5)
+uniform float rotations; // = 1
+uniform float scale; // = 8
+uniform vec4 backColor; // = vec4(0.15, 0.15, 0.15, 1.0)
 
 vec4 transition (vec2 uv) {
   

@@ -1,7 +1,7 @@
 // Author: Mr Speaker
 // License: MIT
 
-uniform float speed; // = 2.0;
+uniform float speed; // = 2.0
 
 vec4 transition(vec2 uv) {
   

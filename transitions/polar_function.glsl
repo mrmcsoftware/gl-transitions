@@ -3,7 +3,7 @@
 
 #define PI 3.14159265359
 
-uniform int segments; // = 5;
+uniform int segments; // = 5
 
 vec4 transition (vec2 uv) {
   

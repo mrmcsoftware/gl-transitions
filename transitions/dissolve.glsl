@@ -5,11 +5,11 @@
 precision mediump float;
 #endif
 
-uniform float uLineWidth;// = 0.1
-uniform vec3 uSpreadClr;// = vec3(1.0, 0.0, 0.0);
-uniform vec3 uHotClr;// = vec3(0.9, 0.9, 0.2);
-uniform float uPow;// = 5.0;
-uniform float uIntensity;// = 1.0;
+uniform float uLineWidth; // = 0.1
+uniform vec3 uSpreadClr; // = vec3(1.0, 0.0, 0.0)
+uniform vec3 uHotClr; // = vec3(0.9, 0.9, 0.2)
+uniform float uPow; // = 5.0
+uniform float uIntensity; // = 1.0
 
 vec2 hash(vec2 p)  // replace this by something better
 {
