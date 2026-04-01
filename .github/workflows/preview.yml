@@ -33,11 +33,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Fetch master for diff
         if: github.event_name == 'pull_request'
-        run: git fetch origin master --depth=1
+        run: git fetch origin master
 
       - name: Checkout PR branch for workflow_dispatch
         if: github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
