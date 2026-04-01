@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
     inputs:
       transition:
-        description: 'Transition name (e.g. fade, CrossZoom — case-sensitive)'
-        required: true
+        description: 'Transition name (optional — auto-detects from PR if omitted)'
+        required: false
         type: string
       pr_number:
-        description: 'PR number to comment on (optional)'
-        required: false
+        description: 'PR number to preview and comment on'
+        required: true
         type: string
 
 concurrency:
@@ -61,15 +61,34 @@ jobs:
 
       - name: Detect transitions
         id: detect
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ ! -f "transitions/${TRANSITION_NAME}.glsl" ]; then
-              echo "Error: transitions/${TRANSITION_NAME}.glsl not found"
-              ls transitions/*.glsl | head -20
-              exit 1
+            if [ -n "$TRANSITION_NAME" ]; then
+              # Single transition specified
+              if [ ! -f "transitions/${TRANSITION_NAME}.glsl" ]; then
+                echo "::error::transitions/${TRANSITION_NAME}.glsl not found"
+                exit 1
+              fi
+              echo "files=transitions/${TRANSITION_NAME}.glsl" >> $GITHUB_OUTPUT
+            else
+              # Auto-detect from PR diff — normalize nested dirs (transitions/X.glsl/X.glsl -> transitions/X.glsl)
+              FILES=$(gh pr diff "$PR_NUMBER" --repo "${{ github.repository }}" --name-only \
+                | grep '^transitions/.*\.glsl$\|^transitions/.*\.glsl/' \
+                | sed 's|transitions/\(.*\.glsl\)/.*|transitions/\1|' \
+                | sort -u | head -20 || true)
+              FILES=$(echo "$FILES" | tr '\n' ' ')
+              if [ -z "$FILES" ]; then
+                echo "::warning::No .glsl files found in PR #${PR_NUMBER}"
+                echo "files=" >> $GITHUB_OUTPUT
+              else
+                echo "Detected files: $FILES"
+                echo "files=$FILES" >> $GITHUB_OUTPUT
+              fi
             fi
-            echo "files=transitions/${TRANSITION_NAME}.glsl" >> $GITHUB_OUTPUT
-            echo "pr=${{ inputs.pr_number }}" >> $GITHUB_OUTPUT
+            echo "pr=$PR_NUMBER" >> $GITHUB_OUTPUT
           else
             FILES=$(git diff --name-only origin/master...HEAD -- 'transitions/*.glsl' | tr '\n' ' ')
             if [ -z "$FILES" ]; then
