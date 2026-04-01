@@ -1,9 +1,9 @@
 // Author: nwoeanhinnogaehr
 // License: MIT
 
-uniform float speed; // = 1.0;
-uniform float angle; // = 1.0;
-uniform float power; // = 1.5;
+uniform float speed; // = 1.0
+uniform float angle; // = 1.0
+uniform float power; // = 1.5
 
 vec4 transition(vec2 uv) {
   vec2 p = uv.xy / vec2(1.0).xy;

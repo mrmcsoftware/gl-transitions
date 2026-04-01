@@ -1,8 +1,8 @@
 // Author: Fernando Kuteken
 // License: MIT
 
-uniform vec2 center; // = vec2(0.5, 0.5);
-uniform vec3 backColor; // = vec3(0.1, 0.1, 0.1);
+uniform vec2 center; // = vec2(0.5, 0.5)
+uniform vec3 backColor; // = vec3(0.1, 0.1, 0.1)
 
 vec4 transition (vec2 uv) {
   

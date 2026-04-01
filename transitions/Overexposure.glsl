@@ -1,7 +1,7 @@
 // Author: Ben Zhang
 // License: MIT
 
-uniform float strength; //= 0.6;
+uniform float strength; // = 0.6
 const float PI = 3.141592653589793;
 
 vec4 transition (vec2 uv) {

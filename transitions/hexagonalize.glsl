@@ -2,8 +2,8 @@
 // License: MIT
 // Hexagonal math from: http://www.redblobgames.com/grids/hexagons/
 
-uniform int steps; // = 50;
-uniform float horizontalHexagons; //= 20;
+uniform int steps; // = 50
+uniform float horizontalHexagons; // = 20
 
 struct Hexagon {
   float q;

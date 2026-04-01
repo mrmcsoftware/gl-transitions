@@ -9,8 +9,8 @@ float rnd (vec2 st) {
         12345.5453123);
 }
 
-uniform bool u_transitionUpToDown; // = true;
-uniform float u_max_static_span;// = 0.5;
+uniform bool u_transitionUpToDown; // = true
+uniform float u_max_static_span; // = 0.5
 
 vec4 transition (vec2 uv) {
   

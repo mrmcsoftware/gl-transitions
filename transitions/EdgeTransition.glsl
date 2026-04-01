@@ -1,8 +1,8 @@
 // Author: Woohyun Kim
 // License: MIT
 
-uniform float edge_thickness; // = 0.001;
-uniform float edge_brightness; // = 8.0;
+uniform float edge_thickness; // = 0.001
+uniform float edge_brightness; // = 8.0
 
 vec4 detectEdgeColor(vec3[9] c) {
   /* adjacent texel array for texel c[4]

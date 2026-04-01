@@ -1,8 +1,8 @@
 // Author:KMojek
 // License: MIT
 
-uniform float adjust; // = 0.5;
-uniform bool reverse; // = false;
+uniform float adjust; // = 0.5
+uniform bool reverse; // = false
 
 float check(vec2 p1, vec2 p2, vec2 p3)
 {
