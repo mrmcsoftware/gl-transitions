@@ -1,11 +1,10 @@
-
-- Website: https://gl-transitions.com  *( alternative hosting: https://gl-transitions.surge.sh/ )*
-- NPM package: https://www.npmjs.com/package/gl-transitions
-- Libraries for gl-transitions: https://github.com/gre/gl-transition-libs
+- Website: [gl-transitions.com](https://gl-transitions.com) *(alternative hosting: [gl-transitions.surge.sh](https://gl-transitions.surge.sh/))*
+- NPM package: [gl-transitions](https://www.npmjs.com/package/gl-transitions)
+- Libraries for gl-transitions: [gl-transition-libs](https://github.com/gre/gl-transition-libs)
 
 ---
 
-Each commit that gets to [gl-transitions/gl-transitions](https://github.com/gl-transitions/gl-transitions)'s master automatically generate a new npm minor release.
+Each commit that gets to [gl-transitions/gl-transitions](https://github.com/gl-transitions/gl-transitions)'s master automatically generates a new npm minor release.
 
 [![CI](https://github.com/gl-transitions/gl-transitions/actions/workflows/ci.yml/badge.svg)](https://github.com/gl-transitions/gl-transitions/actions/workflows/ci.yml) [![npm version](https://badge.fury.io/js/gl-transitions.svg)](https://badge.fury.io/js/gl-transitions)
 
@@ -13,7 +12,7 @@ Each commit that gets to [gl-transitions/gl-transitions](https://github.com/gl-t
 
 # GL Transition Specification v1
 
-**NB. This is a technical documentation, for more informal information, please see https://gl-transitions.com/ homepage.**
+**NB. This is a technical documentation, for more informal information, please see the [gl-transitions.com](https://gl-transitions.com/) homepage.**
 
 This document specifies GL Transition Specification **v1**, `1` as in `gl-transitions @ 1` (consistently to the NPM package major). For any breaking changes in this specification, semver will be respected and the major will get bumped.
 
@@ -48,15 +47,15 @@ A GL Transition is a GLSL code that implements a `transition` function which tak
 - `vec4 getFromColor(vec2 uv)`: lookup the "from" texture at a given uv coordinate.
 - `vec4 getToColor(vec2 uv)`: lookup the "to" texture at a given uv coordinate.
 
-> don't directly use `texture2D` to get a texture pixel out of from and to textures. Instead, use `getFromColor(vec2)` and `getToColor(vec2)`. That way, the "implementer" can properly implement ratio preserving support as well as chosing a different color for the "out of bound" case.
+> don't directly use `texture2D` to get a texture pixel out of from and to textures. Instead, use `getFromColor(vec2)` and `getToColor(vec2)`. That way, the "implementer" can properly implement ratio preserving support as well as choosing a different color for the "out of bound" case.
 
 ### Transition parameters
 
-Transition parameters are parameters than the final user can set to tweak the transition. They are constant over a full run of a transition *(no parameter changes when progress moves from 0.0 to 1.0)*.
+Transition parameters are parameters that the final user can set to tweak the transition. They are constant over a full run of a transition *(no parameter changes when progress moves from 0.0 to 1.0)*.
 
 > any constant you define in your transitions are potential parameters to expose.
 
-When you define a transition parameter, you must also define a default value that will get set in case the final user didn't provided it. It's unfortunately not possible to initialize a uniform in GLSL 120 (WebGL 1) but we support commented code `// = value`
+When you define a transition parameter, you must also define a default value that will get set in case the final user didn't provide it. It's unfortunately not possible to initialize a uniform in GLSL 120 (WebGL 1) but we support commented code `// = value`
 
 Examples:
 
@@ -67,7 +66,6 @@ uniform vec2 foo; // = vec2(42.0, 42.0)
 
 The following variants are also supported:
 
-
 ```glsl
 uniform float foo/* = 42.0 */;
 uniform vec2 foo /*= vec2(42.0, 42.0)*/, bar /* = vec2(1.) */;
@@ -75,8 +73,6 @@ uniform vec2 foo, bar; // = vec2(1.0, 2.0); // both at the same time ! (needs a 
 ```
 
 
-# `gl-transitions`
+# `gl-transitions` collection policy
 
-> TBD this is not finished to be written. just keeping these notes around...
-
-- If we have duplicated transitions or one transition is more generic than another one, we don't necessary drop the less generic one: it might be more performant and might fit for some users. We also want to keep backward compat'. if we still want to drop it, what we will do is to deprecate it and drop it at the next major bump.
+- If we have duplicated transitions or one transition is more generic than another one, we don't necessarily drop the less generic one: it might be more performant and might fit for some users. We also want to keep backward compat'. If we still want to drop it, what we will do is to deprecate it and drop it at the next major bump.
