@@ -93,10 +93,7 @@ vec2 rotateUv(vec2 uv, float angle, vec2 anchor, float zDirection) {
 
 vec4 transition (vec2 uv) {
     
-    vec2 iResolution = vec2(100.0, 100.0); // screen size
-    
     vec2 myst = uv;
-    float ratio = iResolution.x / iResolution.y; // screen ratio
     float animationTime = progress; //getAnimationTime();
     float easingTime = KeySpline(animationTime, .68,.01,.17,.98);
     float blur = normpdf(easingTime);
