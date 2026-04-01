@@ -40,8 +40,8 @@ float fbm (in vec2 st) {
 }
 
 vec4 transition (vec2 uv) {
-    if (progress == 0.0) return getFromColor(uv);
-    if (progress == 1.0) return getToColor(uv);
+    if (progress <= 0.0) return getFromColor(uv);
+    if (progress >= 1.0) return getToColor(uv);
     vec4 from = getFromColor(uv);
     vec4 to = getToColor(uv);
     float n = fbm(uv * 4.);
