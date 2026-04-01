@@ -1,4 +1,4 @@
-// Author:lizhongjian
+// Author: lizhongjian
 // License: MIT
 
 vec4 transition (vec2 uv) {

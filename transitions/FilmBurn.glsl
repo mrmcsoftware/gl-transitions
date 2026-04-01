@@ -1,5 +1,5 @@
-// author: Anastasia Dunbar
-// license: MIT
+// Author: Anastasia Dunbar
+// License: MIT
 uniform float Seed; // = 2.31
 float sigmoid(float x, float a) {
     float b = pow(x*2.,a)/2.;

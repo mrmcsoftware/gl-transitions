@@ -1,4 +1,4 @@
-// author: gre
+// Author: gre
 // License: MIT
 uniform float smoothness; // = 0.3
 uniform bool opening; // = true

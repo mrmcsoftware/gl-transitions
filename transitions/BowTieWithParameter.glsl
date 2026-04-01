@@ -1,4 +1,4 @@
-// Author:KMojek
+// Author: KMojek
 // License: MIT
 
 uniform float adjust; // = 0.5;

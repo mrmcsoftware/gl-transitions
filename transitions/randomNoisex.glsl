@@ -1,4 +1,4 @@
-// Author:towrabbit
+// Author: towrabbit
 // License: MIT
 
 float random (vec2 st) {

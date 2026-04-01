@@ -1,5 +1,5 @@
-// author: Brandon Anzaldi
-// license: MIT
+// Author: Brandon Anzaldi
+// License: MIT
 uniform float offset; // = 0.05
 
 // Pseudo-random noise function
