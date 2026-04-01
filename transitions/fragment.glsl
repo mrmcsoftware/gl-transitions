@@ -13,10 +13,11 @@ vec2 random2(vec2 par) {
 }
 
 vec4 transition (vec2 uv) {
-    if (progress == 0.0) return getFromColor(uv);
-    if (progress == 1.0) return getToColor(uv);
+    if (progress <= 0.0) return getFromColor(uv);
+    if (progress >= 1.0) return getToColor(uv);
 
-    float time = progress * 8.0;
+    const float duration = 8.0;
+    float time = progress * duration;
     vec2 point[POINTS];
     for (int i = 0; i < POINTS; i++) {
         point[i] = random2(vec2(float(i)));
@@ -27,7 +28,7 @@ vec4 transition (vec2 uv) {
     for (int i = 0; i < POINTS; i++) {
         vec2 dir = normalize(random2(vec2(float(i), float(i) + 11.)));
         float v = (1.0 + random(dir) * 0.5) * 0.2;
-        vec2 ofst = dir * clamp(time - 0.5, 0.0, 8.0) * v;
+        vec2 ofst = dir * clamp(time - 0.5, 0.0, duration) * v;
         vec2 U = uv - ofst;
 
         if (U.x < 0.0 || U.x > 1.0 || U.y < 0.0 || U.y > 1.0) continue;
