@@ -1,4 +1,4 @@
-// Author:haiyoucuv
+// Author: haiyoucuv
 // License: MIT
 
 vec4 scale(in vec2 uv){

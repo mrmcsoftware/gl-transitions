@@ -1,4 +1,4 @@
-// author: gre
+// Author: gre
 // License: MIT
 uniform vec3 color;// = vec3(0.0)
 uniform float colorPhase; // = 0.4 ; // if 0.0, there is no black phase, if 0.9, the black phase is very important

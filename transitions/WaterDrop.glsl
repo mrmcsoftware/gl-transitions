@@ -1,5 +1,5 @@
-// author: Paweł Płóciennik
-// license: MIT
+// Author: Paweł Płóciennik
+// License: MIT
 uniform float amplitude; // = 30
 uniform float speed; // = 30
 

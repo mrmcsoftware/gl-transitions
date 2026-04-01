@@ -1,5 +1,5 @@
-// author: gre
-// license: MIT
+// Author: gre
+// License: MIT
 
 vec4 transition (vec2 uv) {
   return mix(

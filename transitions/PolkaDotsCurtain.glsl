@@ -1,5 +1,5 @@
-// author: bobylito
-// license: MIT
+// Author: bobylito
+// License: MIT
 const float SQRT_2 = 1.414213562373;
 uniform float dots;// = 20.0;
 uniform vec2 center;// = vec2(0, 0);
